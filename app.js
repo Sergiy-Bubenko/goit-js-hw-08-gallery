@@ -63,3 +63,60 @@ const galleryItems = [
     description: 'Lighthouse Coast Sea',
   },
 ];
+
+
+const galleryContainer = document.querySelector('.js-gallery');
+const modalContainer = document.querySelector('.lightbox')
+const modalImgContainer = document.querySelector('.lightbox__content')
+const btnCloseModal = document.querySelector('.lightbox__button')
+const cardsMarkup = createCardGalleryMarkup(galleryItems)
+
+galleryContainer.insertAdjacentHTML('beforeend', cardsMarkup);
+
+galleryContainer.addEventListener('click', onGalleryContainerClick);
+btnCloseModal.addEventListener('click', closeModal)
+
+
+function createCardGalleryMarkup(galleryItems) {
+  return galleryItems.map(({ preview, original, description }) => {
+    return `
+<li class="gallery__item">
+  <a
+    class="gallery__link"
+    href="${original}"
+  >
+    <img
+      class="gallery__image"
+      src="${preview}"
+      data-source="${original}"
+      alt="${description}"
+    />
+  </a>
+</li>
+`
+    }).join('');
+};
+
+function onGalleryContainerClick(event) {
+
+   if (event.target.nodeName !== 'IMG') {
+    return
+  }
+  event.preventDefault()
+
+  console.log(modalContainer);
+  modalImgContainer.firstElementChild.src = event.target.dataset.source;
+  modalImgContainer.firstElementChild.alt = event.target.alt;
+  
+ modalContainer.classList.add('is-open')
+
+};
+
+function closeModal(event) {
+  if (event.target.nodeName !== 'BUTTON') {
+    return
+  }
+  modalContainer.classList.remove('is-open')
+modalImgContainer.innerHTML = '<img class="lightbox__image" src="" alt="" />'
+
+};
